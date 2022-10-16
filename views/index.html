@@ -1,15 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Assignment 3</title>
-</head>
-<body>
-  <div>
-    <p>Water: {{.water}}m</p>
-    <p>Wind: {{.wind}}m/s</p>
-  </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <title>Assignment 3</title>
+  </head>
+  <body>
+    <div class="flex flex-col items-center justify-center">
+      <p>Wind: <span class="wind"></span> m/s&emsp;Status: <span class="wind-status"></span></p>
+      <p>Water: <span class="water"></span> m&emsp;Status: <span class="water-status"></span></p>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script>
+      (function () {
+        let wind = $(".wind");
+        let water = $(".water");
+        let waterStatus = $(".water-status");
+        let windStatus = $(".wind-status");
+        
+        const _waterStatus = (water) => {
+          if (water < 5) return "aman";
+          if (water > 6 && water < 8) return "siaga";
+          return "bahaya"
+        }
+        
+        const _windStatus = (wind) => {
+          if (wind < 6) return "aman";
+          if (wind > 7 && wind < 15) return "siaga";
+          return "bahaya"
+        }
+        ,
+          poll = function () {
+            $.ajax({
+              url: "../data.json",
+              dataType: "json",
+              type: "get",
+              success: function (data) {
+                wind.text(data.status.wind);
+                water.text(data.status.water);
+                waterStatus.text(_waterStatus(parseInt(data.status.water)))
+                windStatus.text(_windStatus(parseInt(data.status.wind)))
+              },
+              error: function () {
+                // error logging
+                console.log("Error!");
+              },
+            });
+          },
+          pollInterval = setInterval(function () {
+            poll();
+          }, 15000);
+        poll(); // run function on init
+      })();
+    </script>
+  </body>
 </html>

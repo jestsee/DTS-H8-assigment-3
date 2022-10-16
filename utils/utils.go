@@ -25,6 +25,7 @@ func WriteRandomData() models.Data {
 }
 
 func WriteJSON(){
+	fmt.Println("write json called")
 	data := WriteRandomData()
 
 	file, _ := json.MarshalIndent(data, "", " ")
@@ -48,6 +49,7 @@ func ReadJSON() {
 }
 
 func CronJob() {
+	fmt.Println("cron job called")
 	WriteJSON()
 	c := cron.New()
 
@@ -55,5 +57,5 @@ func CronJob() {
 
 	c.AddFunc("@every 15s", WriteJSON)
 	c.Start()
-	time.Sleep(time.Minute * 5)
+	time.Sleep(time.Minute * 15)
 }
